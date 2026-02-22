@@ -1,11 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-// ════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════
 // LANDING PAGE — laterna.space
-// ════════════════════════════════════════════════════════════
-// Fully self-contained. No external images.
-// Everything is CSS, SVG, and Canvas.
+// ════════════════════════════════════════════════════════════════
+// Layered hero: lab background → avatar → neon title + content
+// Images: /background.png, /avatar.png (in public/)
 
 export default function Landing() {
   return (
@@ -19,149 +19,114 @@ export default function Landing() {
   );
 }
 
-// ════════════════════════════════════════════════════════════
-// HERO
-// ════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════
+// HERO — Layered scene
+// ════════════════════════════════════════════════════════════════
 
 function HeroSection() {
-  const canvasRef = useRef(null);
   const [visible, setVisible] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
-    // Fade in after mount
-    const t = setTimeout(() => setVisible(true), 100);
+    const t = setTimeout(() => setVisible(true), 150);
     return () => clearTimeout(t);
   }, []);
 
-  // Animated particle background (lightweight)
+  // Lightweight scroll tracking for parallax
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    const dpr = window.devicePixelRatio || 1;
-    let animFrame;
-    let particles = [];
-
-    const resize = () => {
-      canvas.width = canvas.clientWidth * dpr;
-      canvas.height = canvas.clientHeight * dpr;
-      ctx.scale(dpr, dpr);
-    };
-
-    const initParticles = () => {
-      particles = [];
-      const w = canvas.clientWidth;
-      const h = canvas.clientHeight;
-      for (let i = 0; i < 60; i++) {
-        particles.push({
-          x: Math.random() * w,
-          y: Math.random() * h,
-          vx: (Math.random() - 0.5) * 0.3,
-          vy: (Math.random() - 0.5) * 0.3,
-          r: Math.random() * 1.5 + 0.5,
-          opacity: Math.random() * 0.4 + 0.1,
-        });
-      }
-    };
-
-    const draw = () => {
-      const w = canvas.clientWidth;
-      const h = canvas.clientHeight;
-      ctx.clearRect(0, 0, w, h);
-
-      particles.forEach(p => {
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.x < 0) p.x = w;
-        if (p.x > w) p.x = 0;
-        if (p.y < 0) p.y = h;
-        if (p.y > h) p.y = 0;
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(232, 101, 10, ${p.opacity})`;
-        ctx.fill();
-      });
-
-      // Draw faint connections
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 120) {
-            ctx.strokeStyle = `rgba(232, 101, 10, ${0.06 * (1 - dist / 120)})`;
-            ctx.lineWidth = 0.5;
-            ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.stroke();
-          }
-        }
-      }
-
-      animFrame = requestAnimationFrame(draw);
-    };
-
-    resize();
-    initParticles();
-    draw();
-
-    window.addEventListener('resize', () => { resize(); initParticles(); });
-    return () => cancelAnimationFrame(animFrame);
+    const onScroll = () => setScrollY(window.scrollY);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  const parallaxBg = scrollY * 0.3;
+  const parallaxAvatar = scrollY * 0.15;
+  const fadeOut = Math.max(0, 1 - scrollY / 600);
 
   return (
     <section style={hero.container}>
-      {/* Particle canvas */}
-      <canvas ref={canvasRef} style={hero.canvas} />
+      {/* Layer 1: Lab background */}
+      <div style={{
+        ...hero.bgLayer,
+        transform: `translateY(${parallaxBg}px) scale(1.05)`,
+      }}>
+        <img
+          src="/background.png"
+          alt=""
+          style={hero.bgImage}
+        />
+        {/* Dark gradient overlays for text readability */}
+        <div style={hero.bgGradientTop} />
+        <div style={hero.bgGradientBottom} />
+        <div style={hero.bgVignette} />
+      </div>
 
-      {/* Radial glow */}
-      <div style={hero.glow} />
+      {/* Layer 2: Plants — right side by glass door */}
+      <div style={{
+        ...hero.plantsLayer,
+        transform: `translateY(${scrollY * 0.2}px)`,
+        opacity: fadeOut,
+      }}>
+        {/* Bird of Paradise — left corner by desk */}
+        <img
+          src="/BoP-removebg.png"
+          alt=""
+          style={hero.bopImage}
+        />
+        {/* Monstera — right side near avatar */}
+        <img
+          src="/monstera-removebg.png"
+          alt=""
+          style={hero.monsteraImage}
+        />
+      </div>
 
-      {/* Grid overlay */}
-      <div style={hero.grid} />
+      {/* Layer 3: Avatar */}
+      <div style={{
+        ...hero.avatarLayer,
+        transform: `translateX(-50%) translateY(${parallaxAvatar}px)`,
+        opacity: fadeOut,
+      }}>
+        <img
+          src="/avatar.png"
+          alt="Scientist avatar"
+          style={hero.avatarImage}
+        />
+        {/* Subtle orange glow behind avatar from plasma */}
+        <div style={hero.avatarGlow} />
+      </div>
 
-      {/* Content */}
+      {/* Layer 3: Content overlay */}
       <div style={{
         ...hero.content,
-        opacity: visible ? 1 : 0,
-        transform: visible ? 'translateY(0)' : 'translateY(20px)',
-        transition: 'opacity 0.8s ease, transform 0.8s ease',
+        opacity: visible ? fadeOut : 0,
+        transform: visible
+          ? `translateY(${-scrollY * 0.1}px)`
+          : 'translateY(30px)',
+        transition: visible ? 'none' : 'opacity 0.8s ease, transform 0.8s ease',
       }}>
-        {/* Neon title */}
+        {/* LATERNA title */}
         <div style={hero.titleWrap}>
           <svg viewBox="0 0 580 80" style={hero.titleSvg} aria-hidden="true">
-            <defs>
-              <filter id="neon">
-                <feGaussianBlur stdDeviation="3" result="b1" />
-                <feGaussianBlur stdDeviation="8" result="b2" />
-                <feMerge>
-                  <feMergeNode in="b2" />
-                  <feMergeNode in="b1" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-            </defs>
             <text x="290" y="58" textAnchor="middle"
               fontSize="64" fontWeight="800" letterSpacing="14"
-              fontFamily='"SF Mono", "Fira Code", "Menlo", monospace'
-              fill="rgba(232, 101, 10, 0.95)" filter="url(#neon)">
+              fontFamily={`"SF Mono", "Fira Code", "Menlo", monospace`}
+              fill="rgba(232, 101, 10, 0.95)">
               LATERNA
             </text>
           </svg>
           <h1 style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0,0,0,0)' }}>
-            Laterna — Interactive Plasma Physics
+            Laterna — Interactive Plasma Physics Simulations
           </h1>
         </div>
 
         {/* Tagline */}
         <p style={hero.tagline}>
-          Interactive plasma physics simulations.<br />
-          Real units. Real physics. Built for learning.
+          Physics you can play with.<br />
+          Fun. Visual. Intuitive.
         </p>
 
-        {/* CTA */}
+        {/* CTA buttons */}
         <div style={hero.ctaRow}>
           <Link to="/gyromotion" style={hero.ctaPrimary}>
             Launch Gyromotion Module →
@@ -173,23 +138,26 @@ function HeroSection() {
 
         {/* Credential chips */}
         <div style={hero.chips}>
-          <span style={hero.chip}>SI Units Throughout</span>
-          <span style={hero.chip}>Boris Pusher Validated</span>
+          <span style={hero.chip}>SI Units</span>
+          <span style={hero.chip}>Analytically Verified</span>
           <span style={hero.chip}>PhD Plasma Physics</span>
         </div>
       </div>
 
       {/* Scroll indicator */}
-      <div style={hero.scrollHint}>
+      <div style={{
+        ...hero.scrollHint,
+        opacity: Math.max(0, 1 - scrollY / 200),
+      }}>
         <div style={hero.scrollLine} />
       </div>
     </section>
   );
 }
 
-// ════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════
 // WHAT IS LATERNA
-// ════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════
 
 function WhatIsSection() {
   return (
@@ -197,26 +165,34 @@ function WhatIsSection() {
       <div style={what.inner}>
         <div style={what.label}>What is Laterna?</div>
         <h2 style={what.heading}>
-          Physics simulations that don't compromise on physics.
+          The interactive plasma physics resource that's been missing.
         </h2>
         <p style={what.body}>
-          Most educational simulations use normalized units that strip away physical meaning.
-          A student sees a circle on screen but can't answer "what is the Larmor radius in millimeters
-          for a 10 eV electron in a 0.1 T field?"
+          Most physics simulations use normalized units. While this approach is convenient
+          for the developer, it defeats the pedagogical purpose of the tool; students interact
+          with abstract curves and dimensionless numbers instead of developing real physical
+          intuition. They can't estimate orders of magnitude and can't connect what they see
+          to what happens in a lab.
         </p>
         <p style={what.body}>
-          Laterna runs every simulation in SI units with validated numerical solvers.
-          You control real magnetic fields in Tesla, real particle energies in electronvolts,
-          and see real spatial scales with a scale bar. The Boris pusher matches analytical
-          solutions to within 10⁻⁴ relative error.
+          Laterna takes a different approach. Every simulation runs in SI units and every
+          solver is tested against analytical solutions where available and rigorous numerical
+          approaches where not. Students control real physical quantities, read real spatial
+          and temporal scales, and build the intuition that lets them walk into a lab or an
+          exam and think in real numbers.
+        </p>
+        <p style={what.body}>
+          My goal is ambitious: build the most comprehensive interactive plasma physics
+          learning platform — from single particle motion and magnetic confinement to plasma
+          technology and diagnostics. One module at a time.
         </p>
 
         <div style={what.features}>
           {[
-            { icon: '⚛', title: 'Real Physics', desc: 'SI units, validated Boris pusher, analytical cross-checks' },
-            { icon: '◎', title: 'Focused Modules', desc: 'One concept per simulation. No dropdown menus hiding six geometries.' },
-            { icon: '📐', title: 'Parameter Plots', desc: 'Live "you are here" markers show how rL, fc, and v⊥ depend on your inputs' },
-            { icon: '🎓', title: 'Guided Learning', desc: 'Step-by-step tutorial sequence from F = qv×B to species comparison' },
+            { icon: '⚛', title: 'Real Physics', desc: 'SI units throughout, validated solvers, analytical cross-checks.' },
+            { icon: '◎', title: 'Focused Modules', desc: 'One concept per simulation. Clean interfaces, no hidden complexity.' },
+            { icon: '📐', title: 'Live Diagnostics', desc: 'Parameter plots with live markers. See how the physics changes with your inputs.' },
+            { icon: '🎓', title: 'Guided Learning', desc: 'Step-by-step tutorials, flashcards, and concept breakdowns built into every module.' },
           ].map(f => (
             <div key={f.title} style={what.feature}>
               <div style={what.featureIcon}>{f.icon}</div>
@@ -225,66 +201,83 @@ function WhatIsSection() {
             </div>
           ))}
         </div>
+
+        {/* Origin story */}
+        <div style={what.origin}>
+          <div style={what.originRule} />
+          <h3 style={what.originTitle}>Why "Laterna"?</h3>
+          <p style={what.originBody}>
+            Born from my obsession with plasma and light, and a frustration
+            with educational tools that hide the real physics behind normalized units and
+            oversimplified models, Laterna is what I wish had existed when I was a student,
+            making my first steps in plasma physics.
+          </p>
+          <p style={what.originBody}>
+            Laterna is Latin for lantern. The name is a tribute to Mathieu Masquère, my late PhD
+            supervisor, who was my guiding light — not just in plasma physics, but through a
+            difficult period in my life. The violet glow in the logo is nitrogen plasma, his
+            favorite gas to work with.
+          </p>
+          <p style={what.originBody}>
+            I hope you enjoy exploring it as much as I enjoy building it.
+          </p>
+        </div>
       </div>
     </section>
   );
 }
 
-// ════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════
 // MODULES PREVIEW
-// ════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════
 
 function ModulesPreview() {
-  const modules = [
+  const singleParticle = [
     {
-      num: '01',
-      title: 'Gyromotion',
-      weeks: 'Weeks 2–3',
+      num: '01', title: 'Gyromotion',
       desc: 'Uniform B field. Larmor radius, cyclotron frequency, pitch angle, species comparison.',
-      status: 'live',
-      link: '/gyromotion',
+      status: 'live', link: '/gyromotion',
     },
     {
-      num: '02',
-      title: 'Magnetic Mirror',
-      weeks: 'Weeks 4–5',
-      desc: 'Mirror ratio, loss cone, μ conservation. Interactive bounce/loss visualization.',
+      num: '02', title: 'Magnetic Mirror',
+      desc: 'Mirror ratio, loss cone, μ conservation. Interactive bounce and loss visualization.',
       status: 'coming',
     },
     {
-      num: '03',
-      title: 'Particle Drifts',
-      weeks: 'Weeks 6–8',
-      desc: 'E×B drift, ∇B drift, curvature drift. Three tabs, one concept each.',
+      num: '03', title: 'Particle Drifts',
+      desc: 'E×B drift, ∇B drift, curvature drift. One concept per tab.',
       status: 'coming',
     },
     {
-      num: '04',
-      title: 'Confinement Geometries',
-      weeks: 'Weeks 9–12',
-      desc: 'Tokamak orbits, banana width, dipole drift shells. Advanced module.',
+      num: '04', title: 'Confinement Geometries',
+      desc: 'Tokamak orbits, banana width, dipole drift shells.',
       status: 'planned',
     },
+  ];
+
+  const comingNext = [
+    { title: 'Glow Discharges', desc: "Paschen's law, DC breakdown, sputtering applications." },
+    { title: 'Plasma Waves', desc: 'Dispersion relations, Langmuir waves, electromagnetic modes.' },
+    { title: 'Plasma Diagnostics', desc: 'Langmuir probes, optical emission spectroscopy, interferometry.' },
   ];
 
   return (
     <section style={mod.section}>
       <div style={mod.inner}>
-        <div style={mod.label}>Curriculum</div>
-        <h2 style={mod.heading}>Four modules. One particle at a time.</h2>
-        <p style={mod.sub}>
-          Each module maps to 2–3 weeks in a standard intro plasma physics course.
-        </p>
+        <div style={mod.label}>Modules</div>
+        <h2 style={mod.heading}>Building the most comprehensive interactive plasma physics resource.</h2>
+        <p style={mod.sub}>One module at a time — each focused on a single phenomenon, built to be explored at your own pace.</p>
 
+        {/* Series 1: Single Particle Motion */}
+        <div style={mod.seriesLabel}>Series 1 — Single Particle Motion</div>
         <div style={mod.grid}>
-          {modules.map(m => (
+          {singleParticle.map(m => (
             <div key={m.num} style={{
               ...mod.card,
               borderColor: m.status === 'live' ? '#E8650A' : 'rgba(255,255,255,0.06)',
             }}>
               <div style={mod.cardNum}>{m.num}</div>
               <div style={mod.cardTitle}>{m.title}</div>
-              <div style={mod.cardWeeks}>{m.weeks}</div>
               <div style={mod.cardDesc}>{m.desc}</div>
               {m.status === 'live' ? (
                 <Link to={m.link} style={mod.cardBtn}>Launch →</Link>
@@ -296,14 +289,26 @@ function ModulesPreview() {
             </div>
           ))}
         </div>
+
+        {/* Coming Next */}
+        <div style={{ ...mod.seriesLabel, marginTop: 48 }}>On the Roadmap</div>
+        <div style={mod.grid}>
+          {comingNext.map(m => (
+            <div key={m.title} style={mod.card}>
+              <div style={mod.cardTitle}>{m.title}</div>
+              <div style={mod.cardDesc}>{m.desc}</div>
+              <span style={mod.cardStatus}>Planned</span>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
 }
 
-// ════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════
 // CREDENTIALS
-// ════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════
 
 function CredentialsSection() {
   return (
@@ -314,19 +319,19 @@ function CredentialsSection() {
         <div style={cred.grid}>
           <div style={cred.item}>
             <div style={cred.itemVal}>PhD</div>
-            <div style={cred.itemLabel}>Plasma Spectroscopy — Toulouse University</div>
+            <div style={cred.itemLabel}>Plasma Physics — Toulouse 3 University (Paul Sabatier)</div>
           </div>
           <div style={cred.item}>
             <div style={cred.itemVal}>PPPL</div>
-            <div style={cred.itemLabel}>Princeton Plasma Physics Laboratory — Program Leader</div>
+            <div style={cred.itemLabel}>Princeton Plasma Physics Laboratory — Physics Lab Manager & Education and Public Engagement Coordinator</div>
           </div>
           <div style={cred.item}>
-            <div style={cred.itemVal}>$650K+</div>
-            <div style={cred.itemLabel}>Research funding secured</div>
+            <div style={cred.itemVal}>R&D</div>
+            <div style={cred.itemLabel}>Microwave plasma for trace element detection and methane reforming, plasma disinfection and sterilization, plasma-powered jet engines</div>
           </div>
           <div style={cred.item}>
-            <div style={cred.itemVal}>200+</div>
-            <div style={cred.itemLabel}>Program participants reached</div>
+            <div style={cred.itemVal}>10+</div>
+            <div style={cred.itemLabel}>Years of hands-on plasma experiments</div>
           </div>
         </div>
       </div>
@@ -334,17 +339,22 @@ function CredentialsSection() {
   );
 }
 
-// ════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════
 // FOOTER
-// ════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════
 
 function Footer() {
   return (
     <footer style={foot.container}>
       <div style={foot.inner}>
         <div style={foot.left}>
-          <span style={{ color: '#E8650A', fontSize: 16 }}>⬡</span>
+          <img src="/laterna-logo-navbar.svg" alt="" style={{ height: 22, width: 'auto' }} />
           <span style={foot.brand}>LATERNA</span>
+        </div>
+        <div style={foot.center}>
+          <a href="mailto:mathieu@laterna.space" style={foot.email}>
+            mathieu@laterna.space
+          </a>
         </div>
         <div style={foot.right}>
           <span>laterna.space</span>
@@ -356,87 +366,153 @@ function Footer() {
   );
 }
 
-// ════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════
 // STYLES
-// ════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════
 
-const ff = '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+const ff = '"DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
 const mono = '"SF Mono", "Fira Code", "Menlo", monospace';
 
 const hero = {
   container: {
-    position: 'relative', minHeight: '100vh', display: 'flex',
-    alignItems: 'center', justifyContent: 'center', overflow: 'hidden',
+    position: 'relative', height: '100vh', overflow: 'hidden',
     background: '#0A0A0F',
   },
-  canvas: {
-    position: 'absolute', inset: 0, width: '100%', height: '100%',
-    pointerEvents: 'none',
-  },
-  glow: {
-    position: 'absolute',
-    width: 600, height: 600,
-    left: '50%', top: '45%',
-    transform: 'translate(-50%, -50%)',
-    background: 'radial-gradient(circle, rgba(232,101,10,0.08) 0%, transparent 70%)',
-    pointerEvents: 'none',
-  },
-  grid: {
+  // --- Background layer ---
+  bgLayer: {
     position: 'absolute', inset: 0,
-    backgroundImage: `
-      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)
-    `,
-    backgroundSize: '60px 60px',
+    willChange: 'transform',
+  },
+  bgImage: {
+    width: '100%', height: '100%',
+    objectFit: 'cover', objectPosition: 'center 60%',
+    display: 'block',
+  },
+  bgGradientTop: {
+    position: 'absolute', top: 0, left: 0, right: 0,
+    height: '45%',
+    background: 'linear-gradient(to bottom, rgba(10,10,15,0.92) 0%, rgba(10,10,15,0.5) 50%, transparent 100%)',
     pointerEvents: 'none',
   },
+  bgGradientBottom: {
+    position: 'absolute', bottom: 0, left: 0, right: 0,
+    height: '35%',
+    background: 'linear-gradient(to top, rgba(10,10,15,1) 0%, rgba(10,10,15,0.6) 40%, transparent 100%)',
+    pointerEvents: 'none',
+  },
+  bgVignette: {
+    position: 'absolute', inset: 0,
+    background: 'radial-gradient(ellipse at center, transparent 40%, rgba(10,10,15,0.7) 100%)',
+    pointerEvents: 'none',
+  },
+  // --- Plants layer ---
+  plantsLayer: {
+    position: 'absolute',
+    inset: 0,
+    zIndex: 3,
+    willChange: 'transform',
+    pointerEvents: 'none',
+  },
+  bopImage: {
+    position: 'absolute',
+    bottom: '0%', right: '5%',
+    height: '55%', maxHeight: 400,
+    width: 'auto',
+    objectFit: 'contain',
+    filter: 'brightness(0.6) saturate(0.8)',
+    mixBlendMode: 'lighten',
+  },
+  monsteraImage: {
+    position: 'absolute',
+    bottom: '0%', left: '0%',
+    height: '50%', maxHeight: 380,
+    width: 'auto',
+    objectFit: 'contain',
+    filter: 'brightness(0.55) saturate(0.8)',
+    mixBlendMode: 'lighten',
+  },
+  // --- Avatar layer ---
+  avatarLayer: {
+    position: 'absolute',
+    bottom: '2%', left: '50%',
+    transform: 'translateX(-50%)',
+    zIndex: 5,
+    willChange: 'transform',
+    display: 'flex', flexDirection: 'column', alignItems: 'center',
+  },
+  avatarImage: {
+    height: '55vh', maxHeight: 520,
+    width: 'auto',
+    objectFit: 'contain',
+    position: 'relative', zIndex: 2,
+    filter: 'drop-shadow(0 0 30px rgba(232,101,10,0.15))',
+  },
+  avatarGlow: {
+    position: 'absolute',
+    bottom: '10%', left: '50%',
+    transform: 'translateX(-50%)',
+    width: 300, height: 200,
+    background: 'radial-gradient(ellipse, rgba(232,101,10,0.12) 0%, transparent 70%)',
+    pointerEvents: 'none', zIndex: 1,
+  },
+  // --- Content layer ---
   content: {
-    position: 'relative', zIndex: 10,
-    textAlign: 'center', maxWidth: 680, padding: '120px 24px 80px',
+    position: 'absolute', top: 0, left: 0, right: 0,
+    zIndex: 10, textAlign: 'center',
+    padding: '10vh 24px 0',
+    pointerEvents: 'none',
   },
   titleWrap: {
-    marginBottom: 24,
+    marginBottom: 16,
+    pointerEvents: 'auto',
   },
   titleSvg: {
-    width: '100%', maxWidth: 520, height: 'auto',
+    width: '100%', maxWidth: 480, height: 'auto',
   },
   tagline: {
-    fontSize: 17, lineHeight: 1.7, color: 'rgba(255,255,255,0.55)',
-    fontFamily: ff, margin: '0 0 32px', fontWeight: 400,
+    fontSize: 16, lineHeight: 1.7, color: 'rgba(255,255,255,0.65)',
+    fontFamily: ff, margin: '0 0 28px', fontWeight: 400,
+    textShadow: '0 2px 20px rgba(0,0,0,0.8)',
   },
   ctaRow: {
     display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap',
-    marginBottom: 32,
+    marginBottom: 24,
+    pointerEvents: 'auto',
   },
   ctaPrimary: {
     display: 'inline-flex', alignItems: 'center', padding: '12px 28px',
     background: '#E8650A', color: '#fff', borderRadius: 8,
     fontSize: 14, fontWeight: 600, textDecoration: 'none',
     fontFamily: ff, letterSpacing: '0.01em',
-    transition: 'background 0.2s',
+    boxShadow: '0 0 20px rgba(232,101,10,0.3), 0 4px 12px rgba(0,0,0,0.3)',
+    transition: 'transform 0.2s, box-shadow 0.2s',
   },
   ctaSecondary: {
     display: 'inline-flex', alignItems: 'center', padding: '12px 28px',
-    background: 'transparent', color: '#999', borderRadius: 8,
+    background: 'rgba(10,10,15,0.6)', color: '#ccc', borderRadius: 8,
     fontSize: 14, fontWeight: 500, textDecoration: 'none',
-    fontFamily: ff, border: '1px solid rgba(255,255,255,0.1)',
+    fontFamily: ff, border: '1px solid rgba(255,255,255,0.15)',
+    backdropFilter: 'blur(8px)',
     transition: 'border-color 0.2s, color 0.2s',
   },
   chips: {
     display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap',
+    pointerEvents: 'auto',
   },
   chip: {
-    fontSize: 11, color: 'rgba(255,255,255,0.4)', padding: '5px 14px',
-    borderRadius: 20, border: '1px solid rgba(255,255,255,0.08)',
+    fontSize: 11, color: 'rgba(255,255,255,0.5)', padding: '5px 14px',
+    borderRadius: 20, border: '1px solid rgba(255,255,255,0.1)',
     fontFamily: mono, letterSpacing: '0.02em',
+    background: 'rgba(10,10,15,0.5)',
+    backdropFilter: 'blur(4px)',
   },
   scrollHint: {
-    position: 'absolute', bottom: 32, left: '50%',
-    transform: 'translateX(-50%)',
+    position: 'absolute', bottom: 28, left: '50%',
+    transform: 'translateX(-50%)', zIndex: 15,
   },
   scrollLine: {
     width: 1, height: 40,
-    background: 'linear-gradient(to bottom, rgba(232,101,10,0.4), transparent)',
+    background: 'linear-gradient(to bottom, rgba(232,101,10,0.5), transparent)',
   },
 };
 
@@ -456,7 +532,7 @@ const what = {
   },
   body: {
     fontSize: 15, lineHeight: 1.8, color: 'rgba(255,255,255,0.5)',
-    margin: '0 0 16px', fontFamily: ff,
+    margin: '0 0 16px', fontFamily: ff, textAlign: 'justify',
   },
   features: {
     display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
@@ -475,6 +551,23 @@ const what = {
   featureDesc: {
     fontSize: 12, lineHeight: 1.6, color: 'rgba(255,255,255,0.4)',
     fontFamily: ff,
+  },
+  origin: {
+    marginTop: 56,
+    paddingTop: 40,
+  },
+  originRule: {
+    width: 40, height: 2,
+    background: 'rgba(232,101,10,0.4)',
+    marginBottom: 24,
+  },
+  originTitle: {
+    fontSize: 18, fontWeight: 600, color: '#E8E8ED',
+    margin: '0 0 16px', fontFamily: ff,
+  },
+  originBody: {
+    fontSize: 15, lineHeight: 1.8, color: 'rgba(255,255,255,0.5)',
+    margin: '0 0 14px', fontFamily: ff, textAlign: 'justify',
   },
 };
 
@@ -496,6 +589,10 @@ const mod = {
     fontSize: 14, color: 'rgba(255,255,255,0.4)', margin: '0 0 40px',
     fontFamily: ff,
   },
+  seriesLabel: {
+    fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.55)',
+    fontFamily: ff, marginBottom: 16, letterSpacing: '0.01em',
+  },
   grid: {
     display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
     gap: 16,
@@ -511,12 +608,8 @@ const mod = {
     marginBottom: 6,
   },
   cardTitle: {
-    fontSize: 16, fontWeight: 700, color: '#E8E8ED', marginBottom: 4,
+    fontSize: 16, fontWeight: 700, color: '#E8E8ED', marginBottom: 8,
     fontFamily: ff,
-  },
-  cardWeeks: {
-    fontSize: 11, color: 'rgba(255,255,255,0.3)', marginBottom: 10,
-    fontFamily: mono,
   },
   cardDesc: {
     fontSize: 12, lineHeight: 1.6, color: 'rgba(255,255,255,0.4)',
@@ -573,6 +666,7 @@ const foot = {
   inner: {
     maxWidth: 900, margin: '0 auto',
     display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+    flexWrap: 'wrap', gap: 12,
   },
   left: {
     display: 'flex', alignItems: 'center', gap: 8,
@@ -580,6 +674,14 @@ const foot = {
   brand: {
     fontSize: 11, fontWeight: 700, letterSpacing: '0.15em',
     color: '#555', fontFamily: mono,
+  },
+  center: {
+    display: 'flex', alignItems: 'center',
+  },
+  email: {
+    fontSize: 11, color: '#E8650A', fontFamily: mono,
+    textDecoration: 'none', letterSpacing: '0.02em',
+    transition: 'opacity 0.2s',
   },
   right: {
     display: 'flex', gap: 8, fontSize: 11, color: '#444',

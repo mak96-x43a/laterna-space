@@ -10,7 +10,7 @@ export default function App() {
       {/* Navigation */}
       <nav style={styles.nav}>
         <Link to="/" style={styles.logo}>
-          <span style={styles.logoMark}>⬡</span>
+          <img src="/laterna-logo-navbar.svg" alt="Laterna" style={styles.logoMark} />
           <span style={styles.logoText}>LATERNA</span>
         </Link>
         <div style={styles.links}>
@@ -20,7 +20,7 @@ export default function App() {
           }}>
             Modules
           </Link>
-          <a href="https://github.com/your-repo" target="_blank" rel="noopener noreferrer" style={styles.navLink}>
+          <a href="https://github.com/mak96-x43a/laterna-space" target="_blank" rel="noopener noreferrer" style={styles.navLink}>
             GitHub
           </a>
         </div>
@@ -46,7 +46,7 @@ const styles = {
     textDecoration: 'none', color: '#E8E8ED',
   },
   logoMark: {
-    fontSize: 20, color: '#E8650A',
+    height: 32, width: 'auto',
   },
   logoText: {
     fontSize: 13, fontWeight: 700, letterSpacing: '0.18em',

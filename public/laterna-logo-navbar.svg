@@ -1,0 +1,195 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="100 80 200 280" width="200" height="280">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#1a1028"/>
+      <stop offset="100%" stop-color="#0a0612"/>
+    </radialGradient>
+
+    <!-- ICP flame core — white to violet, widest near base -->
+    <radialGradient id="icpCore" cx="50%" cy="65%" r="50%" fx="50%" fy="68%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="1"/>
+      <stop offset="20%" stop-color="#F0E6FF" stop-opacity="0.95"/>
+      <stop offset="45%" stop-color="#D8B4FE" stop-opacity="0.75"/>
+      <stop offset="70%" stop-color="#A855F7" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#7C3AED" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Outer envelope — deeper purple -->
+    <radialGradient id="outerEnvelope" cx="50%" cy="65%" r="55%">
+      <stop offset="0%" stop-color="#C084FC" stop-opacity="0.3"/>
+      <stop offset="35%" stop-color="#A855F7" stop-opacity="0.15"/>
+      <stop offset="65%" stop-color="#7C3AED" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#6D28D9" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Ambient glow — violet -->
+    <radialGradient id="ambientGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#C084FC" stop-opacity="0.22"/>
+      <stop offset="40%" stop-color="#7C3AED" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#4C1D95" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Glass -->
+    <linearGradient id="glassLeft" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="white" stop-opacity="0.12"/>
+      <stop offset="40%" stop-color="white" stop-opacity="0.03"/>
+      <stop offset="100%" stop-color="white" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="glassRight" x1="100%" y1="0%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="white" stop-opacity="0.08"/>
+      <stop offset="40%" stop-color="white" stop-opacity="0.02"/>
+      <stop offset="100%" stop-color="white" stop-opacity="0"/>
+    </linearGradient>
+
+    <!-- Metals -->
+    <radialGradient id="reservoir" cx="40%" cy="35%" r="55%">
+      <stop offset="0%" stop-color="#9CA3AF"/>
+      <stop offset="25%" stop-color="#7B8494"/>
+      <stop offset="60%" stop-color="#525B6B"/>
+      <stop offset="100%" stop-color="#374151"/>
+    </radialGradient>
+    <linearGradient id="metalRing" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#9CA3AF"/>
+      <stop offset="30%" stop-color="#D1D5DB"/>
+      <stop offset="50%" stop-color="#9CA3AF"/>
+      <stop offset="70%" stop-color="#D1D5DB"/>
+      <stop offset="100%" stop-color="#6B7280"/>
+    </linearGradient>
+
+    <!-- Filters -->
+    <filter id="coreGlow" x="-100%" y="-50%" width="300%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="5"/>
+    </filter>
+    <filter id="envelopeGlow" x="-100%" y="-50%" width="300%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="10"/>
+    </filter>
+    <filter id="wideGlow" x="-150%" y="-100%" width="400%" height="300%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="22"/>
+    </filter>
+    <filter id="tinyGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2.5"/>
+    </filter>
+  </defs>
+
+
+  <g transform="translate(200, 210)">
+
+    <!-- ============================================ -->
+    <!-- AMBIENT GLOW                                 -->
+    <!-- ============================================ -->
+    <ellipse cx="0" cy="-10" rx="95" ry="110" fill="url(#ambientGlow)" filter="url(#wideGlow)"/>
+
+    <!-- ============================================ -->
+    <!-- ROUND RESERVOIR BASE                         -->
+    <!-- ============================================ -->
+    <ellipse cx="0" cy="118" rx="55" ry="8" fill="black" opacity="0.3" filter="url(#envelopeGlow)"/>
+    <ellipse cx="0" cy="100" rx="50" ry="28" fill="url(#reservoir)" stroke="#4B5563" stroke-width="1"/>
+    <ellipse cx="-15" cy="92" rx="20" ry="12" fill="white" opacity="0.07"/>
+    <ellipse cx="0" cy="100" rx="50" ry="28" fill="none" stroke="#9CA3AF" stroke-width="0.5" opacity="0.3"/>
+    <ellipse cx="0" cy="120" rx="30" ry="6" fill="#4B5563" stroke="#374151" stroke-width="1"/>
+
+    <!-- ============================================ -->
+    <!-- METAL COLLAR / BURNER                        -->
+    <!-- ============================================ -->
+    <ellipse cx="0" cy="75" rx="40" ry="7" fill="url(#metalRing)" stroke="#4B5563" stroke-width="0.8"/>
+    <rect x="-36" y="68" width="72" height="10" rx="2" fill="url(#metalRing)" stroke="#4B5563" stroke-width="0.8"/>
+    <circle cx="-42" cy="73" r="4" fill="#6B7280" stroke="#4B5563" stroke-width="0.8"/>
+    <circle cx="-42" cy="73" r="2" fill="#9CA3AF"/>
+    <rect x="-42" y="60" width="84" height="10" rx="2" fill="url(#metalRing)" stroke="#4B5563" stroke-width="0.8"/>
+    <rect x="-38" y="58" width="76" height="3" rx="1" fill="#D1D5DB" stroke="#9CA3AF" stroke-width="0.5"/>
+
+    <!-- ============================================ -->
+    <!-- GLASS CHIMNEY                                -->
+    <!-- ============================================ -->
+    <path d="M-42,60 C-52,40 -58,10 -60,-20 C-62,-55 -56,-80 -45,-100 C-38,-112 -30,-118 -22,-120"
+          fill="none" stroke="white" stroke-width="1.2" opacity="0.15"/>
+    <path d="M42,60 C52,40 58,10 60,-20 C62,-55 56,-80 45,-100 C38,-112 30,-118 22,-120"
+          fill="none" stroke="white" stroke-width="1.0" opacity="0.1"/>
+    <path d="M-42,60 C-52,40 -58,10 -60,-20 C-62,-55 -56,-80 -45,-100 C-38,-112 -30,-118 -22,-120
+             L-18,-120 C-26,-118 -34,-112 -40,-100 C-50,-80 -54,-55 -52,-20 C-50,10 -44,40 -36,60 Z"
+          fill="url(#glassLeft)"/>
+    <path d="M42,60 C52,40 58,10 60,-20 C62,-55 56,-80 45,-100 C38,-112 30,-118 22,-120
+             L18,-120 C26,-118 34,-112 40,-100 C50,-80 54,-55 52,-20 C50,10 44,40 36,60 Z"
+          fill="url(#glassRight)"/>
+    <path d="M-38,50 C-47,30 -52,5 -54,-25 C-55,-50 -50,-75 -42,-92"
+          fill="none" stroke="white" stroke-width="1.5" opacity="0.18" stroke-linecap="round"/>
+    <path d="M-35,45 C-43,28 -48,5 -49,-22 C-50,-42 -47,-62 -40,-78"
+          fill="none" stroke="white" stroke-width="0.7" opacity="0.08" stroke-linecap="round"/>
+    <ellipse cx="0" cy="-120" rx="22" ry="4" fill="none" stroke="white" stroke-width="1.2" opacity="0.2"/>
+
+    <!-- ============================================ -->
+    <!-- N₂ ICP PLASMA PLUME                          -->
+    <!-- Candle flame shape + violet/purple palette   -->
+    <!-- ============================================ -->
+
+    <!-- Outermost diffuse purple halo -->
+    <path d="M0,55 C-30,35 -38,5 -35,-25 C-32,-50 -25,-75 -15,-90 C-8,-100 -3,-108 0,-112
+             C3,-108 8,-100 15,-90 C25,-75 32,-50 35,-25 C38,5 30,35 0,55 Z"
+          fill="#7C3AED" opacity="0.06" filter="url(#wideGlow)"/>
+
+    <!-- Outer purple envelope -->
+    <path d="M0,52 C-25,32 -32,2 -30,-28 C-28,-52 -22,-72 -13,-87 C-7,-96 -2,-104 0,-108
+             C2,-104 7,-96 13,-87 C22,-72 28,-52 30,-28 C32,2 25,32 0,52 Z"
+          fill="url(#outerEnvelope)" filter="url(#envelopeGlow)"/>
+
+    <!-- Mid violet envelope -->
+    <path d="M0,48 C-20,30 -26,2 -24,-26 C-22,-48 -17,-68 -10,-82 C-5,-92 -2,-98 0,-102
+             C2,-98 5,-92 10,-82 C17,-68 22,-48 24,-26 C26,2 20,30 0,48 Z"
+          fill="#A855F7" opacity="0.15" filter="url(#envelopeGlow)"/>
+
+    <!-- Bright violet-white analytical zone — flame core -->
+    <path d="M0,44 C-16,26 -20,0 -19,-24 C-18,-44 -13,-62 -8,-76 C-4,-86 -1,-94 0,-98
+             C1,-94 4,-86 8,-76 C13,-62 18,-44 19,-24 C20,0 16,26 0,44 Z"
+          fill="url(#icpCore)" filter="url(#coreGlow)" opacity="0.7"/>
+
+    <!-- Inner bright core — lavender-white -->
+    <path d="M0,40 C-12,22 -14,-2 -13,-22 C-12,-40 -9,-56 -5,-68 C-3,-76 -1,-84 0,-90
+             C1,-84 3,-76 5,-68 C9,-56 12,-40 13,-22 C14,-2 12,22 0,40 Z"
+          fill="#E9D5FF" filter="url(#coreGlow)" opacity="0.5"/>
+
+    <!-- Hot white core — organic teardrop -->
+    <path d="M0,36 C-8,18 -9,-4 -8,-20 C-7,-36 -5,-50 -3,-62 C-1.5,-70 -0.5,-78 0,-84
+             C0.5,-78 1.5,-70 3,-62 C5,-50 7,-36 8,-20 C9,-4 8,18 0,36 Z"
+          fill="white" filter="url(#coreGlow)" opacity="0.6"/>
+
+    <!-- Brightest inner flame -->
+    <path d="M0,32 C-5,16 -6,-4 -5.5,-18 C-5,-32 -3.5,-44 -2,-54 C-1,-62 -0.3,-70 0,-76
+             C0.3,-70 1,-62 2,-54 C3.5,-44 5,-32 5.5,-18 C6,-4 5,16 0,32 Z"
+          fill="white" filter="url(#tinyGlow)" opacity="0.75"/>
+
+    <!-- Base emission — toroidal glow -->
+    <ellipse cx="0" cy="42" rx="14" ry="8" fill="white" opacity="0.5" filter="url(#coreGlow)"/>
+    <ellipse cx="0" cy="44" rx="20" ry="10" fill="#C084FC" opacity="0.25" filter="url(#envelopeGlow)"/>
+    <ellipse cx="0" cy="42" rx="9" ry="5" fill="white" opacity="0.85"/>
+
+    <!-- Subtle asymmetry in outer envelope -->
+    <path d="M-22,15 C-26,0 -25,-20 -22,-38 C-19,-52 -15,-64 -10,-74"
+          fill="none" stroke="#D8B4FE" stroke-width="2.5" opacity="0.06" filter="url(#envelopeGlow)"/>
+
+    <!-- Tail flame tip -->
+    <path d="M0,-82 C-2,-88 -1,-94 0,-100 C1,-94 2,-88 0,-82 Z"
+          fill="#D8B4FE" opacity="0.4" filter="url(#tinyGlow)"/>
+
+    <!-- Organic hot spots within core -->
+    <ellipse cx="-2" cy="10" rx="5" ry="7" fill="white" opacity="0.15" filter="url(#tinyGlow)"/>
+    <ellipse cx="1.5" cy="-15" rx="4" ry="8" fill="white" opacity="0.12" filter="url(#tinyGlow)"/>
+    <ellipse cx="-1" cy="-40" rx="3" ry="6" fill="#F0E6FF" opacity="0.1" filter="url(#tinyGlow)"/>
+
+    <!-- Plasma light on glass -->
+    <path d="M-50,-5 C-48,-25 -46,-45 -42,-65"
+          fill="none" stroke="#A855F7" stroke-width="1.5" opacity="0.05" stroke-linecap="round"/>
+    <path d="M50,-5 C48,-25 46,-45 42,-65"
+          fill="none" stroke="#A855F7" stroke-width="1" opacity="0.03" stroke-linecap="round"/>
+
+    <!-- Plasma glow on metal -->
+    <rect x="-36" y="58" width="72" height="3" rx="1" fill="#C084FC" opacity="0.07"/>
+    <ellipse cx="0" cy="75" rx="38" ry="4" fill="#A855F7" opacity="0.04"/>
+    <ellipse cx="0" cy="88" rx="35" ry="10" fill="#7C3AED" opacity="0.03"/>
+
+  </g>
+
+  <!-- ============================================ -->
+  <!-- WORDMARK                                     -->
+  <!-- ============================================ -->
+
+</svg>
