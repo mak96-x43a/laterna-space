@@ -334,6 +334,12 @@ function CredentialsSection() {
             <div style={cred.itemLabel}>Years of hands-on plasma experiments</div>
           </div>
         </div>
+        <p style={cred.support}>
+          Laterna is a solo project, built independently.{' '}
+          <a href="https://buymeacoffee.com/laterna.space" target="_blank" rel="noopener noreferrer" style={cred.supportLink}>
+            Support this project →
+          </a>
+        </p>
       </div>
     </section>
   );
@@ -354,6 +360,10 @@ function Footer() {
         <div style={foot.center}>
           <a href="mailto:mathieu@laterna.space" style={foot.email}>
             mathieu@laterna.space
+          </a>
+          <span style={{ color: '#333', margin: '0 8px' }}>·</span>
+          <a href="https://buymeacoffee.com/laterna.space" target="_blank" rel="noopener noreferrer" style={foot.email}>
+            Support this project
           </a>
         </div>
         <div style={foot.right}>
@@ -654,6 +664,14 @@ const cred = {
   itemLabel: {
     fontSize: 12, lineHeight: 1.5, color: 'rgba(255,255,255,0.4)',
     fontFamily: ff,
+  },
+  support: {
+    marginTop: 32, fontSize: 13, color: 'rgba(255,255,255,0.35)',
+    fontFamily: ff,
+  },
+  supportLink: {
+    color: '#E8650A', textDecoration: 'none', fontWeight: 500,
+    transition: 'opacity 0.2s',
   },
 };
 
