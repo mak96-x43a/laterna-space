@@ -20,6 +20,12 @@ export default function App() {
           }}>
             Modules
           </Link>
+          <Link to="/virtual-labs" style={{
+            ...styles.navLink,
+            color: location.pathname === '/virtual-labs' ? '#E8650A' : '#888',
+          }}>
+            Virtual Labs
+          </Link>
           <a href="https://github.com/mak96-x43a/laterna-space" target="_blank" rel="noopener noreferrer" style={styles.navLink}>
             GitHub
           </a>

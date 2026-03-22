@@ -13,6 +13,7 @@ export default function Landing() {
       <HeroSection />
       <WhatIsSection />
       <ModulesPreview />
+      <VirtualLabsPreview />
       <CredentialsSection />
       <Footer />
     </div>
@@ -256,7 +257,6 @@ function ModulesPreview() {
   ];
 
   const comingNext = [
-    { title: 'Glow Discharges', desc: "Paschen's law, DC breakdown, sputtering applications." },
     { title: 'Plasma Waves', desc: 'Dispersion relations, Langmuir waves, electromagnetic modes.' },
     { title: 'Plasma Diagnostics', desc: 'Langmuir probes, optical emission spectroscopy, interferometry.' },
   ];
@@ -298,6 +298,53 @@ function ModulesPreview() {
               <div style={mod.cardTitle}>{m.title}</div>
               <div style={mod.cardDesc}>{m.desc}</div>
               <span style={mod.cardStatus}>Planned</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ════════════════════════════════════════════════════════════════
+// VIRTUAL LABS PREVIEW
+// ════════════════════════════════════════════════════════════════
+
+function VirtualLabsPreview() {
+  const labs = [
+    {
+      num: '01', title: 'DC Discharge',
+      desc: "Explore electrical breakdown in gases. Set the gas, pressure, electrode gap, and voltage — ignite the plasma and build Paschen's curve point by point.",
+      status: 'live', link: '/dc-discharge',
+    },
+    {
+      num: '02', title: 'Planeterrella',
+      desc: 'Magnetized spheres in a vacuum vessel. Simulate auroral ovals and visualize charged particle motion along dipole field lines.',
+      status: 'planned',
+    },
+  ];
+
+  return (
+    <section style={vlab.section}>
+      <div style={mod.inner}>
+        <div style={mod.label}>Virtual Labs</div>
+        <h2 style={mod.heading}>Real experiments. No hardware required.</h2>
+        <p style={mod.sub}>Interactive simulations of real laboratory equipment — conduct experiments, collect data, and explore the physics at your own pace.</p>
+
+        <div style={mod.grid}>
+          {labs.map(m => (
+            <div key={m.num} style={{
+              ...mod.card,
+              borderColor: m.status === 'live' ? '#E8650A' : 'rgba(255,255,255,0.06)',
+            }}>
+              <div style={mod.cardNum}>{m.num}</div>
+              <div style={mod.cardTitle}>{m.title}</div>
+              <div style={mod.cardDesc}>{m.desc}</div>
+              {m.status === 'live' ? (
+                <Link to={m.link} style={mod.cardBtn}>Launch →</Link>
+              ) : (
+                <span style={mod.cardStatus}>Planned</span>
+              )}
             </div>
           ))}
         </div>
@@ -631,6 +678,13 @@ const mod = {
   },
   cardStatus: {
     fontSize: 11, color: 'rgba(255,255,255,0.25)', fontFamily: mono,
+  },
+};
+
+const vlab = {
+  section: {
+    padding: '100px 24px', background: '#0A0A0F',
+    borderTop: '1px solid rgba(255,255,255,0.04)',
   },
 };
 
