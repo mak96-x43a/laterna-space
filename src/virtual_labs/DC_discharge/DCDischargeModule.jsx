@@ -770,6 +770,13 @@ export default function DCDischargeModule() {
               </div>
             </div>
           )}
+
+          {/* DEDICATION */}
+          <div style={{ padding: '12px 16px', marginTop: 'auto', borderTop: '1px solid #F2F2F4' }}>
+            <div style={{ fontSize: 10, fontStyle: 'italic', color: '#AAA', lineHeight: 1.6, textAlign: 'center' }}>
+              Dedicated to Jimmy, Sean, Alex, and Arturo — the RGDX team at PPPL.
+            </div>
+          </div>
         </div>
       </div>
 
