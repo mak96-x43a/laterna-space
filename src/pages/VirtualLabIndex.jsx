@@ -12,7 +12,12 @@ export default function VirtualLabIndex() {
       status: 'live', link: '/dc-discharge',
     },
     {
-      num: '02', title: 'Planeterrella',
+      num: '02', title: 'Electron Beam',
+      desc: "One apparatus, three classic experiments. Bend an electron beam in a magnetic field to measure its charge-to-mass ratio, deflect it with charged plates to fix the sign of its charge, then cross the fields to select a single velocity — Thomson's method.",
+      status: 'live', link: '/em-v1',
+    },
+    {
+      num: '03', title: 'Planeterrella',
       desc: 'Magnetized spheres in a vacuum vessel. Simulate auroral ovals and visualize charged particle motion along dipole field lines.',
       status: 'planned',
     },
