@@ -135,6 +135,9 @@ function HeroSection() {
           <Link to="/modules" style={hero.ctaSecondary}>
             Browse Modules
           </Link>
+          <Link to="/virtual-labs" style={hero.ctaSecondary}>
+            Browse Virtual Labs
+          </Link>
         </div>
 
         {/* Credential chips */}
