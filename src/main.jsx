@@ -7,6 +7,7 @@ import ModuleIndex from './pages/ModuleIndex';
 import GyromotionModule from './modules/gyromotion/GyromotionModule';
 import './index.css';
 import DCDischargeModule from './virtual_labs/DC_discharge/DCDischargeModule';
+import ElectronBeamLab from './virtual_labs/e_over_m/ElectronBeamLab';
 import VirtualLabIndex from './pages/VirtualLabIndex';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -22,6 +23,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         {/* Simulation modules run fullscreen — no nav shell */}
         <Route path="gyromotion" element={<GyromotionModule />} />
         <Route path="dc-discharge" element={<DCDischargeModule />} />
+        <Route path="em-v1" element={<ElectronBeamLab />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

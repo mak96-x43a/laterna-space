@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local version backups — keep prior module versions out of the repo
+*_backup*.jsx
+*_v[0-9]*.jsx
+*_vertical.jsx
+*_Leybold.jsx
