@@ -28,3 +28,5 @@ dist-ssr
 *_v[0-9]*.jsx
 *_vertical.jsx
 *_Leybold.jsx
+
+.DS_Store
